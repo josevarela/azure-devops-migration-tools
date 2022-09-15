@@ -38,6 +38,16 @@ namespace MigrationTools.ProcessorEnrichers
 
         public bool ValidatingRequiredField(string fieldToFind, List<WorkItemData> sourceWorkItems)
         {
+            //
+            //  jvTmp - Remove ReflectedWorkItemId validation to enable listing
+            //  of all area paths and iterations
+            //  
+            if (fieldToFind.Contains("ReflectedWorkItemId"))
+            {
+                return true;
+            }
+            //  end jvTmp
+            //
             var sourceWorkItemTypes = sourceWorkItems.Select(wid => wid.ToWorkItem().Type).Distinct();
             var targetTypes = Engine.Target.WorkItems.Project.ToProject().WorkItemTypes;
             var result = true;

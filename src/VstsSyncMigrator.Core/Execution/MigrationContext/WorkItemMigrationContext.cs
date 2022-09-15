@@ -388,6 +388,10 @@ namespace VstsSyncMigrator.Engine
             {
                 newWorkItem.AreaPath = _nodeStructureEnricher.GetNewNodeName(oldWorkItem.AreaPath, TfsNodeStructureType.Area);
                 newWorkItem.IterationPath = _nodeStructureEnricher.GetNewNodeName(oldWorkItem.IterationPath, TfsNodeStructureType.Iteration);
+                System.IO.File.AppendAllLines(".\\MappedAreaPathsAndIterations.csv", new string[] {
+                    $"area path,\"{oldWorkItem.AreaPath}\",\"{newWorkItem.AreaPath}\"",
+                    $"iteration path,\"{oldWorkItem.IterationPath}\",\"{newWorkItem.IterationPath}\""}
+                );
             }
 
             switch (destType)
@@ -483,7 +487,10 @@ namespace VstsSyncMigrator.Engine
                             AddMetric("SyncRev", processWorkItemMetrics, revisionsToMigrate.Count);
                         }
                     }
-                    AddParameter("TargetWorkItem", processWorkItemParamiters, targetWorkItem.ToWorkItem().Revisions.Count.ToString());
+                    if (targetWorkItem != null)
+                    {
+                        AddParameter("TargetWorkItem", processWorkItemParamiters, targetWorkItem.ToWorkItem().Revisions.Count.ToString());
+                    }
 
                     if (targetWorkItem != null && targetWorkItem.ToWorkItem().IsDirty)
                     {
@@ -613,6 +620,18 @@ namespace VstsSyncMigrator.Engine
                 foreach (var revision in revisionsToMigrate)
                 {
                     var currentRevisionWorkItem = sourceWorkItem.GetRevision(revision.Number);
+
+                    ////////////////////
+                    /// jvTemp - Output area path and iteration path for all revisions
+                    targetWorkItem = null;
+                    var oldWorkItem = currentRevisionWorkItem.ToWorkItem();
+                    System.IO.File.AppendAllLines(".\\AreaPathsAndIterations.csv", new string[] {
+                    $"{oldWorkItem.Type.Name},{oldWorkItem.Id},\"{oldWorkItem.AreaPath}\",\"{oldWorkItem.IterationPath}\""}
+                    );
+                    continue;
+                    /// end jvTemp
+                    ///////////////////
+
 
                     TraceWriteLine(LogEventLevel.Information, " Processing Revision [{RevisionNumber}]",
                         new Dictionary<string, object>() {

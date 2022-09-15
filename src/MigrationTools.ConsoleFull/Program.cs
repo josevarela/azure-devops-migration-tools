@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.IO;
+using System.Threading.Tasks;
 using MigrationTools;
 using MigrationTools.Host;
 
@@ -8,6 +9,14 @@ namespace VstsSyncMigrator.ConsoleApp
     {
         public static async Task Main(string[] args)
         {
+            if (File.Exists(".\\AreaPathsAndIterations.csv"))
+            {
+                System.IO.File.Delete(".\\AreaPathsAndIterations.csv");
+            }
+            if (File.Exists(".\\MappedAreaPathsAndIterations.csv"))
+            {
+                System.IO.File.Delete(".\\MappedAreaPathsAndIterations.csv");
+            }
             var hostBuilder = MigrationToolHost.CreateDefaultBuilder(args);
             if(hostBuilder is null)
             {

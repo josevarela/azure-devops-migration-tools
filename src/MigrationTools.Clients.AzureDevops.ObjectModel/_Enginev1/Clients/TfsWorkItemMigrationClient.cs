@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
@@ -124,6 +125,14 @@ namespace MigrationTools._EngineV1.Clients
 
         public override ReflectedWorkItemId GetReflectedWorkItemId(WorkItemData workItem)
         {
+            //
+            //  jvTmp - Remove ReflectedWorkItemId validation to enable listing
+            //  of all area paths and iterations
+            // 
+            return null;
+            //end jvTemp
+            //
+
             Log.Debug("GetReflectedWorkItemId: START");
             var local = workItem.ToWorkItem();
             if (!local.Fields.Contains(Config.AsTeamProjectConfig().ReflectedWorkItemIDFieldName))
